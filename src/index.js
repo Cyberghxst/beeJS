@@ -6,6 +6,7 @@ const newMap = require("./cache Handler/cache.js");
 const Db = require("meatdb");
 const fs = require("fs");
 const path = require("path");
+const ms = require("ms");
 const debug = require("debug")("ez:main");
 debug("Loaded");
 class Bot {

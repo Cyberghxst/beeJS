@@ -9,6 +9,16 @@ const path = require("path");
 const ms = require("ms");
 const debug = require("debug")("ez:main");
 debug("Loaded");
+
+/**
+ * Holds code execution for the given time.
+ * @param {number} duration - How many time to hold code execution.
+ * @returns {Promise<unknown>}
+ */
+async function sleep(duration) {
+    return new Promise((resolve) => setTimeout(resolve, duration));
+}
+
 class Bot {
     constructor(opt) {
         this.opt = opt
@@ -21,6 +31,7 @@ class Bot {
         this.funcParser = require("./funcs/parser")
         this.functions = new newMap()
         this.variable = new newMap()
+        this.status = new Map()
         this.#start()
         if (typeof this.prefix != "string") throw new Error("prefix must be string");
         getVersion().then(z => {
@@ -55,7 +66,7 @@ class Bot {
         });
         // Presence manager
         this.client.on('ready', async () => {
-            while(this.status.size > 0) {
+            while (this.status.size > 0) {
                 for(let [k, v] of this.status) {
                     const session = this.client;
                     session.user.setPresence({
@@ -115,9 +126,7 @@ class Bot {
             })
     }
 
-
     //commands
-
     botJoinCommand(opt) {
         this.cmd.botJoin.set(this.cmd.botJoin.size,
             opt)
